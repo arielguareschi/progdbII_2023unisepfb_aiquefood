@@ -20,6 +20,22 @@ async def get_usuarios(db: AsyncSession = Depends(get_session)):
         return usuarios
 
 
+@router.get('/{usuario_id}',
+            response_model=UsuariosSchemaBase,
+            status_code=status.HTTP_200_OK)
+async def get_usuario(usuario_id: int, db: AsyncSession = Depends(get_session)):
+    async with db as session:
+        query = select(UsuarioModel).filter(UsuarioModel.id == usuario_id)
+        result = await session.execute(query)
+        usuario: UsuariosSchemaBase = result.scalars().one_or_none()
+
+        if usuario:
+            return usuario
+        else:
+            raise HTTPException(detail="Usuario não encontrado",
+                                status_code=status.HTTP_404_NOT_FOUND)
+
+
 @router.post('/signup', status_code=status.HTTP_201_CREATED,
              response_model=UsuariosSchemaBase)
 async def post_usuario(usuario: UsuarioSchemaCreate,
@@ -61,6 +77,7 @@ async def put_usuario(usuario_id: int,
                 usuario_up.senha = usuario.senha
             if usuario.eh_admin:
                 usuario_up.eh_admin = usuario.eh_admin
+            await session.commit()
             return usuario_up
         else:
             raise HTTPException(detail="Usuario não encontrado",
