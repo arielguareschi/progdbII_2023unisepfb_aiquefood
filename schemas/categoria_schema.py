@@ -1,5 +1,7 @@
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel
+
+from schemas.produto_schema import ProdutoSchema
 
 
 class CategoriaSchema(BaseModel):
@@ -10,3 +12,7 @@ class CategoriaSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+class CategoriaSchemaProdutos(CategoriaSchema):
+    produtos: Optional[List[ProdutoSchema]]
+    
