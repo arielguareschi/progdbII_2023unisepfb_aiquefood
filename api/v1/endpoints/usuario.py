@@ -1,12 +1,19 @@
 from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, Response, status
-from sqlalchemy.future import select
-from core.deps import get_session
+from fastapi.responses import JSONResponse
+from fastapi.security import OAuth2PasswordRequestForm
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from sqlalchemy.exc import IntegrityError
+
 from models.usuario_model import UsuarioModel
 from schemas.usuario_schema import UsuariosSchemaBase, UsuarioSchemaCreate, UsuarioSchemaUp
+
+from core.deps import get_session, get_current_user
+from core.security import gerar_hash_senha
+from core.auth import autenticar, criar_token_acesso
 
 router = APIRouter()
 
