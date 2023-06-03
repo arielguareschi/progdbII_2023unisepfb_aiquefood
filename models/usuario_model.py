@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, Boolean
 
 class UsuarioModel(settings.DBBaseModel):
     __tablename__ = 'usuarios'
-
+    
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String(100), nullable=True)
     sobrenome = Column(String(100), nullable=True)
